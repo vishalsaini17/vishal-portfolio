@@ -1,0 +1,140 @@
+{
+  "entities": {
+    "ContactSubmission": {
+      "title": "ContactSubmission",
+      "description": "User contact form submissions",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique UUID for the submission"
+        },
+        "name": {
+          "type": "string",
+          "description": "Submitting user's full name"
+        },
+        "email": {
+          "type": "string",
+          "description": "Submitting user's email address"
+        },
+        "message": {
+          "type": "string",
+          "description": "Message from the user"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of submission creation"
+        }
+      },
+      "required": ["id", "name", "email", "message", "createdAt"]
+    },
+    "Resume": {
+      "title": "Resume",
+      "description": "Uploaded resume configuration",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document ID, usually 'latest'"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Name of the raw file"
+        },
+        "content": {
+          "type": "string",
+          "description": "Standard text content or base64 representation of resume"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the resume was last updated"
+        }
+      },
+      "required": ["id", "fileName", "content", "updatedAt"]
+    },
+    "Profile": {
+      "title": "Profile",
+      "description": "Portfolio owner profile details",
+      "type": "object",
+      "properties": {
+        "profileName": {
+          "type": "string"
+        },
+        "profileTitle": {
+          "type": "string"
+        },
+        "profileAvatar": {
+          "type": "string"
+        },
+        "blogTitle": {
+          "type": "string"
+        },
+        "blogDescription": {
+          "type": "string"
+        },
+        "blogEnabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "A personal written blog post inside the portfolio",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID / document ID"
+        },
+        "title": {
+          "type": "string"
+        },
+        "excerpt": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "published"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tags": {
+          "type": "array"
+        },
+        "coverImage": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "title", "excerpt", "content", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "contacts": {
+      "schema": "ContactSubmission",
+      "description": "Collection storing contact form data"
+    },
+    "resumes": {
+      "schema": "Resume",
+      "description": "Collection storing the active resume files, with 'latest' being the primary"
+    },
+    "profile": {
+      "schema": "Profile",
+      "description": "Collection storing portfolio metadata details"
+    },
+    "blogs": {
+      "schema": "BlogPost",
+      "description": "Collection storing personal blogs and articles"
+    }
+  }
+}

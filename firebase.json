@@ -1,0 +1,16 @@
+{
+  "firestore": [
+    {
+      "database": "(default)",
+      "rules": "firestore.rules"
+    },
+    {
+      "database": "vishal-portfolio",
+      "rules": "firestore.rules"
+    },
+    {
+      "database": "ai-studio-f4315d27-f4ff-4c3a-9b84-9cfa83351ead",
+      "rules": "firestore.rules"
+    }
+  ]
+}
