@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   LogIn, LogOut, Mail, Trash2, Calendar, FileText, Upload, CheckCircle2, 
   AlertTriangle, Shield, User, Plus, Image, ExternalLink, RefreshCw, Home, Phone, Layers,
-  ArrowUp, ArrowDown, Search, Download, BookOpen
+  ArrowUp, ArrowDown, Search, Download, BookOpen, Sparkles, Send, Tag, Save
 } from 'lucide-react';
 import { 
   auth, db, GoogleAuthProvider, signInWithPopup, signOut, handleFirestoreError, OperationType 
@@ -52,6 +52,49 @@ const maskEmail = (email: string | null | undefined): string => {
   const last = local[local.length - 1];
   const middle = 'x'.repeat(local.length - 2);
   return `${first}${middle}${last}@${domain}`;
+};
+
+const compressAndResizeImage = (file: File, maxDim: number = 800, quality: number = 0.7): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(event.target?.result as string);
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(dataUrl);
+      };
+      img.onerror = () => {
+        reject(new Error('Failed to load image for compression'));
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.onerror = () => {
+      reject(new Error('Failed to read file'));
+    };
+    reader.readAsDataURL(file);
+  });
 };
 
 interface SkillsTextInputProps {
@@ -313,6 +356,7 @@ export default function AdminTab() {
     if (files && files.length > 0) {
       validateAndSetFile(files[0]);
     }
+    e.target.value = '';
   };
 
   const validateAndSetFile = (file: File) => {
@@ -893,7 +937,7 @@ export default function AdminTab() {
                 className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all ${
                   adminActiveTab === 'blog'
                     ? 'bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-xs'
-                    : 'bg-slate-150/10 dark:bg-slate-800/20 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-805/50'
+                    : 'bg-slate-100/10 dark:bg-slate-800/20 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
                 }`}
               >
                 ✍️ Blog Manager
@@ -1104,23 +1148,21 @@ export default function AdminTab() {
                                   type="file"
                                   accept="image/*"
                                   className="hidden"
-                                  onChange={(e) => {
+                                  onChange={async (e) => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
                                     if (!file.type.startsWith('image/')) {
                                       alert('Please select an image file.');
                                       return;
                                     }
-                                    if (file.size > 1024 * 1024) {
-                                      alert('Please upload an image smaller than 1MB to ensure stable database storage.');
-                                      return;
-                                    }
-                                    const reader = new FileReader();
-                                    reader.onload = (event) => {
-                                      const base64 = event.target?.result as string;
+                                    try {
+                                      const base64 = await compressAndResizeImage(file);
                                       setProfileForm({ ...profileForm, profileAvatar: base64 });
-                                    };
-                                    reader.readAsDataURL(file);
+                                    } catch (err) {
+                                      console.error('Avatar upload/compression failed:', err);
+                                      alert('Could not set avatar. Please check image format and try again.');
+                                    }
+                                    e.target.value = '';
                                   }}
                                 />
                                 <button
@@ -1551,7 +1593,7 @@ export default function AdminTab() {
                   {profileSubTab === 'resume' && (
                     <div className="space-y-8 animate-fade-in">
                       {/* Section: Dynamic Layout Builder */}
-                      <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-850 bg-slate-50/30 dark:bg-slate-900/10 space-y-6">
+                      <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/10 space-y-6">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-150 dark:border-slate-800 pb-4">
                           <div className="space-y-1">
                             <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 font-display">
@@ -2046,21 +2088,19 @@ export default function AdminTab() {
                                           id={`project-image-file-${originalIndex}`}
                                           type="file"
                                           accept="image/*"
-                                          onChange={(e) => {
+                                          onChange={async (e) => {
                                             const file = e.target.files?.[0];
                                             if (!file) return;
-                                            if (file.size > 1024 * 1024) {
-                                              alert("This image exceeds the Firestore max document limit size of 1MB. Please choose a smaller or optimized image.");
-                                              return;
-                                            }
-                                            const reader = new FileReader();
-                                            reader.onload = (event) => {
-                                              const base64 = event.target?.result as string;
+                                            try {
+                                              const base64 = await compressAndResizeImage(file);
                                               const projects = [...profileForm.projects];
                                               projects[originalIndex].imageUrl = base64;
                                               setProfileForm({ ...profileForm, projects });
-                                            };
-                                            reader.readAsDataURL(file);
+                                            } catch (err) {
+                                              console.error('Project image upload failed:', err);
+                                              alert('Failed to compress or upload project image. Please try another image.');
+                                            }
+                                            e.target.value = '';
                                           }}
                                           className="hidden"
                                         />
@@ -2664,107 +2704,264 @@ export default function AdminTab() {
                   {/* LIST OR FORM RENDER SWITCHER */}
                   {editingBlog ? (
                     /* BLOG POST EDITOR FORM */
-                    <form onSubmit={handleSaveBlog} className="space-y-5 animate-fade-in font-sans">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="flex flex-col space-y-1.5">
-                          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Article Title :</label>
-                          <input
-                            type="text"
-                            value={editingBlog.title || ''}
-                            onChange={(e) => setEditingBlog({ ...editingBlog, title: e.target.value })}
-                            className="px-3 py-2 rounded-xl border border-slate-150 dark:border-slate-800 bg-transparent text-slate-850 dark:text-slate-100 text-xs focus:border-orange-500 outline-none"
-                            placeholder="Engineering deep dive onto custom hooks..."
-                            required
-                          />
-                        </div>
-
-                        <div className="flex flex-col space-y-1.5">
-                          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Cover Image URL (Optional) :</label>
-                          <input
-                            type="text"
-                            value={editingBlog.coverImage || ''}
-                            onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
-                            className="px-3 py-2 rounded-xl border border-slate-150 dark:border-slate-800 bg-transparent text-slate-855 dark:text-slate-100 text-xs focus:border-orange-500 outline-none"
-                            placeholder="https://images.unsplash.com/photo-..."
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="flex flex-col space-y-1.5">
-                          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tags / Categories (Comma Separated) :</label>
-                          <input
-                            type="text"
-                            value={editingBlog.tags ? editingBlog.tags.join(', ') : ''}
-                            onChange={(e) => {
-                              const tagsArray = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
-                              setEditingBlog({ ...editingBlog, tags: tagsArray });
-                            }}
-                            className="px-3 py-2 rounded-xl border border-slate-150 dark:border-slate-800 bg-transparent text-slate-855 dark:text-slate-100 text-xs focus:border-orange-500 outline-none"
-                            placeholder="React, TypeScript, Optimization"
-                          />
-                        </div>
-
-                        <div className="flex flex-col space-y-1.5">
-                          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Short Summary Excerpt :</label>
-                          <input
-                            type="text"
-                            value={editingBlog.excerpt || ''}
-                            onChange={(e) => setEditingBlog({ ...editingBlog, excerpt: e.target.value })}
-                            className="px-3 py-2 rounded-xl border border-slate-150 dark:border-slate-800 bg-transparent text-slate-855 dark:text-slate-100 text-xs focus:border-orange-500 outline-none"
-                            placeholder="A brief summary sentence shown on the portfolio grid to spark interest."
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col space-y-2 text-left">
-                        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Article Content (Markdown Web Editor) :</label>
-                        <BlogMarkdownEditor
-                          value={editingBlog.content || ''}
-                          onChange={(newContent) => setEditingBlog({ ...editingBlog, content: newContent })}
-                          placeholder="Write deep system design deep-dives, developer rants, or tutorial guides here..."
-                        />
-                      </div>
-
-                      {/* Status select indicators */}
-                      <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+                    <form onSubmit={handleSaveBlog} className="space-y-6 animate-fade-in font-sans">
+                      {/* Top editor navigation subheader */}
+                      <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-950/20 px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800/80">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Save Status Selection :</span>
-                          <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold font-sans uppercase tracking-wider ${
-                            editingBlog.status === 'published' ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'
-                          }`}>
-                            {editingBlog.status || 'draft'}
-                          </span>
+                          <span className="flex h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
+                          <h4 className="text-xs font-semibold text-slate-800 dark:text-slate-100">
+                            {isNewBlog ? 'New Entry Workspace' : 'Editing Saved Entry'}
+                          </h4>
                         </div>
-
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
-                            onClick={() => setEditingBlog({ ...editingBlog, status: 'draft' })}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                              editingBlog.status === 'draft'
-                                ? 'bg-amber-500 text-white'
-                                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800'
-                            }`}
+                            onClick={() => setEditingBlog(null)}
+                            className="px-3 py-1 bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 text-[10px] font-bold rounded-lg transition-colors cursor-pointer"
                           >
-                            Set as Draft
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setEditingBlog({ ...editingBlog, status: 'published' })}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                              editingBlog.status === 'published'
-                                ? 'bg-emerald-500 text-white'
-                                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800'
-                            }`}
-                          >
-                            Ready to Publish
+                            Discard & Leave
                           </button>
                         </div>
                       </div>
 
-                      {/* Status callbacks feedback */}
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* LEFT COLUMN: PRIMARY WORKSPACE (2/3 width) */}
+                        <div className="lg:col-span-2 space-y-5 text-left">
+                          {/* Title Input */}
+                          <div className="flex flex-col space-y-1.5">
+                            <label className="text-xs font-bold text-slate-700 dark:text-slate-350 tracking-wide flex items-center gap-1.5">
+                              <BookOpen className="w-3.5 h-3.5 text-orange-500" />
+                              <span>Article Title</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={editingBlog.title || ''}
+                              onChange={(e) => setEditingBlog({ ...editingBlog, title: e.target.value })}
+                              className="w-full px-4 py-3 rounded-xl border border-slate-150 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm font-semibold placeholder:text-slate-450 focus:ring-1 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all shadow-xs"
+                              placeholder="e.g., Deep Dive into React Compiler and State Optimization..."
+                              required
+                            />
+                          </div>
+
+                          {/* Excerpt Input */}
+                          <div className="flex flex-col space-y-1.5">
+                            <label className="text-xs font-bold text-slate-700 dark:text-slate-350 tracking-wide flex items-center gap-1.5">
+                              <FileText className="w-3.5 h-3.5 text-slate-400" />
+                              <span>Short Summary / Excerpt</span>
+                            </label>
+                            <textarea
+                              rows={2.5}
+                              value={editingBlog.excerpt || ''}
+                              onChange={(e) => setEditingBlog({ ...editingBlog, excerpt: e.target.value })}
+                              className="w-full px-4 py-2.5 rounded-xl border border-slate-150 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-xs placeholder:text-slate-450 focus:ring-1 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all resize-none shadow-xs"
+                              placeholder="Provide a compelling 1-2 sentence preview to engage readers on the main listing grid..."
+                              required
+                            />
+                          </div>
+
+                          {/* Tags & Categories card */}
+                          <div className="flex flex-col space-y-1.5">
+                            <label className="text-xs font-bold text-slate-700 dark:text-slate-350 tracking-wide flex items-center gap-1.5">
+                              <Tag className="w-3.5 h-3.5 text-orange-500" />
+                              <span>Tags / Categories</span>
+                            </label>
+                            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 space-y-3 shadow-xs">
+                              <input
+                                type="text"
+                                value={editingBlog.tags ? editingBlog.tags.join(', ') : ''}
+                                onChange={(e) => {
+                                  const tagsArray = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+                                  setEditingBlog({ ...editingBlog, tags: tagsArray });
+                                }}
+                                className="w-full px-3 py-2 rounded-xl border border-slate-150 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 text-xs focus:ring-1 focus:ring-orange-500 focus:border-orange-500 outline-none"
+                                placeholder="React, TypeScript, Optimization..."
+                              />
+                              <p className="text-[10px] text-slate-450 dark:text-slate-500 leading-normal">
+                                Separate each category with a comma. These tags will be searchable and filterable.
+                              </p>
+                              {editingBlog.tags && editingBlog.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 pt-1">
+                                  {editingBlog.tags.map((tag: string, i: number) => (
+                                    <span key={i} className="px-2.5 py-0.5 rounded bg-orange-50 dark:bg-orange-950/30 text-[10px] font-bold text-orange-600 dark:text-orange-450 border border-orange-100 dark:border-orange-950/20">
+                                      #{tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* RIGHT COLUMN: METADATA & SETTINGS SIDEBAR (1/3 width) */}
+                        <div className="lg:col-span-1 space-y-5">
+                          {/* Cover Image Settings Card */}
+                          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 space-y-3.5 shadow-xs flex flex-col h-full justify-between">
+                            <div className="space-y-3.5">
+                              <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
+                                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                                  <Image className="w-3.5 h-3.5 text-orange-500" />
+                                  <span>Cover Image</span>
+                                </h4>
+                                {editingBlog.coverImage && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditingBlog({ ...editingBlog, coverImage: '' })}
+                                    className="text-[10px] text-rose-500 hover:text-rose-600 transition-colors cursor-pointer font-bold flex items-center gap-0.5"
+                                  >
+                                    Remove
+                                  </button>
+                                )}
+                              </div>
+
+                              {/* Live Cover Preview Container */}
+                              <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-200 dark:border-slate-800 flex flex-col justify-center items-center text-center p-3">
+                                {editingBlog.coverImage ? (
+                                  <>
+                                    <img
+                                      src={editingBlog.coverImage}
+                                      alt="Cover Preview"
+                                      className="absolute inset-0 w-full h-full object-cover z-0"
+                                      referrerPolicy="no-referrer"
+                                      onError={(e) => {
+                                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400';
+                                      }}
+                                    />
+                                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 to-slate-950/10 p-2 z-10 flex flex-col items-start text-left">
+                                      <span className="text-[8px] uppercase tracking-widest font-black text-orange-400 bg-orange-950/40 px-1 py-0.5 rounded border border-orange-950/10">Header Preview</span>
+                                      <p className="text-[10px] text-white font-medium truncate w-full mt-1">
+                                        {editingBlog.coverImage.startsWith('data:') 
+                                          ? `Uploaded File (${(editingBlog.coverImage.length / 1024).toFixed(1)} KB)`
+                                          : editingBlog.coverImage
+                                        }
+                                      </p>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="space-y-1.5 text-slate-400 dark:text-slate-600">
+                                    <Image className="w-8 h-8 mx-auto stroke-[1.5] text-slate-350 dark:text-slate-705" />
+                                    <div>
+                                      <p className="text-[10px] font-bold text-slate-550 dark:text-slate-400">No Image Configured</p>
+                                      <p className="text-[9px] text-slate-440 dark:text-slate-500 max-w-[180px] mx-auto mt-0.5 leading-normal">
+                                        Enter a custom URL below or upload a compressed local image file
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="space-y-2 mt-4">
+                              {/* Text Input for URL */}
+                              <div className="relative">
+                                <input
+                                  type="text"
+                                  value={editingBlog.coverImage && editingBlog.coverImage.startsWith('data:') ? 'Local Image File Uploaded' : (editingBlog.coverImage || '')}
+                                  disabled={!!(editingBlog.coverImage && editingBlog.coverImage.startsWith('data:'))}
+                                  onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
+                                  className="w-full px-3 py-2 rounded-xl border border-slate-150 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 text-xs focus:ring-1 focus:ring-orange-500 focus:border-orange-500 outline-none disabled:bg-slate-50 dark:disabled:bg-slate-955/40 disabled:text-slate-400 pr-8"
+                                  placeholder="Paste Unsplash or external image URL..."
+                                />
+                                {editingBlog.coverImage && editingBlog.coverImage.startsWith('data:') && (
+                                  <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" title="Local upload active" />
+                                )}
+                              </div>
+
+                              {/* Upload Button Trigger & Input */}
+                              <button
+                                type="button"
+                                onClick={() => document.getElementById('blog-cover-upload-file')?.click()}
+                                className="w-full flex items-center justify-center gap-1.5 bg-white dark:bg-slate-955 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-800 transition duration-250 cursor-pointer shadow-xs"
+                              >
+                                <Upload className="w-3.5 h-3.5 text-slate-500" />
+                                <span>Upload Image File</span>
+                              </button>
+                              <input
+                                id="blog-cover-upload-file"
+                                type="file"
+                                accept="image/*"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
+                                  try {
+                                    const base64 = await compressAndResizeImage(file);
+                                    setEditingBlog({ ...editingBlog, coverImage: base64 });
+                                  } catch (err) {
+                                    console.error('Image upload/compression failed:', err);
+                                    alert('Could not set cover image. Please check image format and try again.');
+                                  }
+                                  e.target.value = '';
+                                }}
+                                className="hidden"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* ARTICLE BODY (MARKDOWN SUPPORTED) Spans FULL WIDTH */}
+                      <div className="flex flex-col space-y-2 text-left pt-6 border-t border-slate-150 dark:border-slate-800/60">
+                        <label className="text-xs font-bold text-slate-700 dark:text-slate-350 tracking-wide flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-orange-400" />
+                          <span>Article Body (Markdown Supported)</span>
+                        </label>
+                        <div className="border border-slate-150 dark:border-slate-800/80 rounded-2xl overflow-hidden focus-within:ring-1 focus-within:ring-orange-500 focus-within:border-orange-500 shadow-xs">
+                          <BlogMarkdownEditor
+                            value={editingBlog.content || ''}
+                            onChange={(newContent) => setEditingBlog({ ...editingBlog, content: newContent })}
+                            placeholder="Start writing your thoughts, tutorial guides, or system architectural notes. You can use standard Markdown tags, lists, links, and code blocks..."
+                          />
+                        </div>
+                      </div>
+
+                      {/* PUBLISHING SETTINGS (Full-width card, matching design template in image) */}
+                      <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 space-y-4 shadow-xs text-left">
+                        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 border-b border-slate-150 dark:border-slate-800/50 pb-2.5">
+                          <Sparkles className="w-3.5 h-3.5 text-orange-500" />
+                          <span>Publishing Settings</span>
+                        </h4>
+
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest font-mono">Current Status:</span>
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-black font-sans uppercase tracking-widest border ${
+                              editingBlog.status === 'published' 
+                                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
+                                : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
+                            }`}>
+                              {editingBlog.status || 'draft'}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => setEditingBlog({ ...editingBlog, status: 'draft' })}
+                              className={`px-6 py-3 rounded-2xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-2 min-w-[130px] justify-center ${
+                                editingBlog.status === 'draft'
+                                  ? 'bg-amber-550 text-white shadow-md shadow-amber-500/20 bg-orange-500'
+                                  : 'bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800'
+                              }`}
+                            >
+                              <span className="w-2 h-2 rounded-full bg-current" />
+                              <span>Keep Draft</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingBlog({ ...editingBlog, status: 'published' })}
+                              className={`px-6 py-3 rounded-2xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-2 min-w-[130px] justify-center ${
+                                editingBlog.status === 'published'
+                                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                                  : 'bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800'
+                              }`}
+                            >
+                              <Send className="w-3.5 h-3.5" />
+                              <span>Publish Now</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Error & Success persistent feedback messages from DB */}
                       {blogSaveStatus.error && (
                         <div className="p-3.5 bg-rose-50 dark:bg-rose-950/15 border border-rose-100 dark:border-rose-950/30 text-rose-600 dark:text-rose-400 rounded-xl text-xs flex items-center gap-2">
                           <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500" />
@@ -2779,23 +2976,30 @@ export default function AdminTab() {
                         </div>
                       )}
 
-                      {/* Actions footer row */}
-                      <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800/60 font-sans">
-                        <button
-                          type="button"
-                          onClick={() => setEditingBlog(null)}
-                          className="px-4.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 border border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 cursor-pointer"
-                        >
-                          Cancel
-                        </button>
+                      {/* Controls Footer buttons */}
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/60 font-sans">
+                        <span className="text-[10px] text-slate-400 font-mono hidden md:inline-block">
+                          {isNewBlog ? 'New entries default to local memory' : `ID: ${editingBlog.id}`}
+                        </span>
 
-                        <button
-                          type="submit"
-                          disabled={blogSaveStatus.loading}
-                          className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer font-sans"
-                        >
-                          {blogSaveStatus.loading ? 'Saving post...' : 'Save & Close'}
-                        </button>
+                        <div className="flex items-center gap-2.5 ml-auto">
+                          <button
+                            type="button"
+                            onClick={() => setEditingBlog(null)}
+                            className="px-4.5 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 border border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                          >
+                            Cancel
+                          </button>
+
+                          <button
+                            type="submit"
+                            disabled={blogSaveStatus.loading}
+                            className="px-6 py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-xs hover:shadow-md transition-all cursor-pointer font-sans flex items-center gap-1.5"
+                          >
+                            <Save className="w-3.5 h-3.5" />
+                            <span>{blogSaveStatus.loading ? 'Saving Entry...' : 'Save & Close'}</span>
+                          </button>
+                        </div>
                       </div>
                     </form>
                   ) : (
@@ -2803,7 +3007,7 @@ export default function AdminTab() {
                     <div className="space-y-4 font-sans animate-fade-in">
                       {blogsLoading ? (
                         <div className="py-20 text-center space-y-2">
-                          <div className="inline-block w-6 h-6 rounded-full border-4 border-slate-100 dark:border-slate-850 border-t-orange-500 animate-spin" />
+                          <div className="inline-block w-6 h-6 rounded-full border-4 border-slate-100 dark:border-slate-800 border-t-orange-500 animate-spin" />
                           <p className="text-[10px] text-slate-400 font-mono animate-pulse">Syncing complete logs list...</p>
                         </div>
                       ) : allBlogs.length === 0 ? (
@@ -2819,11 +3023,11 @@ export default function AdminTab() {
                           </div>
                         </div>
                       ) : (
-                        <div className="divide-y divide-slate-100 dark:divide-slate-850/65 border border-slate-150 dark:border-slate-800/80 rounded-2xl overflow-hidden bg-slate-50/10 dark:bg-slate-900/40">
+                        <div className="divide-y divide-slate-100 dark:divide-slate-800/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden bg-slate-50/10 dark:bg-slate-900/40">
                           {allBlogs.map((blog) => (
-                            <div key={blog.id} className="p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-slate-900/20 hover:bg-slate-50/50 dark:hover:bg-slate-850/40 transition-colors">
+                            <div key={blog.id} className="p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-slate-900/20 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                               <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                                <div className="w-12 h-12 rounded-xl border border-slate-150 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-850 shrink-0 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-800 shrink-0 flex items-center justify-center">
                                   {blog.coverImage ? (
                                     <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                   ) : (

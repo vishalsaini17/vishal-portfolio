@@ -134,11 +134,11 @@ Passionated and versatile Developer.
 
   if (loading) {
     return (
-      <aside className="w-full lg:w-96 shrink-0 flex flex-col items-center">
-        <div className="w-full ring-1 ring-slate-100 dark:ring-slate-800/80 bg-white dark:bg-slate-900 rounded-[32px] shadow-sm p-6 flex flex-col items-center mt-12 relative animate-pulse">
+      <aside className="w-full lg:w-96 lg:sticky lg:top-12 shrink-0 flex flex-col items-center">
+        <div className="w-full border border-slate-200/60 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-[32px] shadow-sm p-6 flex flex-col items-center mt-12 relative animate-pulse">
           {/* Pulsing Avatar Frame */}
           <div className="absolute -top-16 w-32 h-32 md:w-36 md:h-36 rounded-3xl p-1.5 bg-amber-200 dark:bg-amber-800/25 flex items-center justify-center">
-            <div className="w-full h-full rounded-2xl bg-slate-200 dark:bg-slate-850"></div>
+            <div className="w-full h-full rounded-2xl bg-slate-200 dark:bg-slate-800"></div>
           </div>
           
           {/* Pulsing Name and Title */}
@@ -160,14 +160,14 @@ Passionated and versatile Developer.
               <div key={i} className="flex items-center gap-4">
                 <div className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-800 shrink-0"></div>
                 <div className="flex-1 space-y-2">
-                  <div className="h-3 bg-slate-200 dark:bg-slate-850 rounded w-1/4"></div>
-                  <div className="h-4 bg-slate-200 dark:bg-slate-850 rounded w-5/6"></div>
+                  <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/4"></div>
+                  <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-5/6"></div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="w-full h-12 rounded-2xl bg-slate-200 dark:bg-slate-850 mt-6"></div>
+          <div className="w-full h-12 rounded-2xl bg-slate-200 dark:bg-slate-800 mt-6"></div>
         </div>
       </aside>
     );
@@ -177,9 +177,9 @@ Passionated and versatile Developer.
   const activeSocialLinks = socialLinks.filter((link) => link.url && link.url.trim() !== '');
 
   return (
-    <aside className="w-full lg:w-96 shrink-0 flex flex-col items-center">
+    <aside className="w-full lg:w-96 lg:sticky lg:top-12 shrink-0 flex flex-col items-center">
       {/* Container Card */}
-      <div className="w-full ring-1 ring-slate-100 dark:ring-slate-800/80 bg-white dark:bg-slate-900 rounded-[32px] shadow-sm p-6 flex flex-col items-center mt-12 relative">
+      <div className="w-full border border-slate-200/60 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-[32px] shadow-sm p-6 flex flex-col items-center mt-12 relative">
         
         {/* Profile Avatar with Yellow Gold Overlay Frame */}
         <div className="absolute -top-16 w-32 h-32 md:w-36 md:h-36 rounded-3xl overflow-hidden shadow-md p-1.5 bg-amber-400 flex items-center justify-center">

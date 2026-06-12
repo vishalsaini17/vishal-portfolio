@@ -165,7 +165,7 @@ export default function ResumeTab() {
               </div>
               <div className="space-y-4">
                 {[1, 2].map((i) => (
-                  <div key={i} className="p-5 rounded-2xl bg-slate-100/55 dark:bg-slate-900/10 border border-slate-100 dark:border-slate-850/20 space-y-3">
+                  <div key={i} className="p-5 rounded-2xl bg-slate-100/55 dark:bg-slate-900/10 border border-slate-100 dark:border-slate-800/20 space-y-3">
                     <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/4"></div>
                     <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-2/3"></div>
                     <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/2"></div>

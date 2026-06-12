@@ -101,7 +101,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f6f9] dark:bg-[#0b101d] text-slate-800 dark:text-slate-100 flex flex-col transition-all duration-500 overflow-x-hidden font-sans pb-16">
+    <div className="min-h-screen bg-[#f3f6f9] dark:bg-[#0b101d] text-slate-800 dark:text-slate-100 flex flex-col transition-all duration-500 overflow-x-clip font-sans pb-16">
       
       {/* Dynamic Header */}
       <Header
@@ -120,7 +120,7 @@ export default function App() {
 
         {/* Right Active Workspace Block */}
         <section className="w-full flex-1 min-w-0">
-          <div className="w-full ring-1 ring-slate-100 dark:ring-slate-850/50 bg-white dark:bg-slate-900 rounded-[32px] p-6 md:p-8 lg:p-10 shadow-xs relative mt-0 lg:mt-12 min-h-[500px]">
+          <div className="w-full border border-slate-200/60 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-[32px] p-6 md:p-8 lg:p-10 shadow-xs relative mt-0 lg:mt-12 min-h-[500px]">
             
             {/* Smooth Animated Tab switcher */}
             <AnimatePresence mode="wait">

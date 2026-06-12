@@ -106,7 +106,7 @@ export default function WorkTab() {
       // Header 2
       if (line.startsWith('## ')) {
         return (
-          <h2 key={idx} className="text-lg md:text-xl font-bold font-display text-slate-850 dark:text-slate-100 mt-5 mb-2.5">
+          <h2 key={idx} className="text-lg md:text-xl font-bold font-display text-slate-800 dark:text-slate-100 mt-5 mb-2.5">
             {line.substring(3)}
           </h2>
         );
@@ -114,7 +114,7 @@ export default function WorkTab() {
       // Header 3
       if (line.startsWith('### ')) {
         return (
-          <h3 key={idx} className="text-base md:text-lg font-bold font-display text-slate-850 dark:text-slate-200 mt-4 mb-2">
+          <h3 key={idx} className="text-base md:text-lg font-bold font-display text-slate-800 dark:text-slate-200 mt-4 mb-2">
             {line.substring(4)}
           </h3>
         );
@@ -209,8 +209,8 @@ export default function WorkTab() {
                 <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-3/4"></div>
               </div>
               <div className="px-5 pt-2 flex items-center justify-between">
-                <div className="h-3 bg-slate-200 dark:bg-slate-850 rounded w-1/3"></div>
-                <div className="h-3 bg-slate-200 dark:bg-slate-850 rounded-full w-4"></div>
+                <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded w-1/3"></div>
+                <div className="h-3 bg-slate-200 dark:bg-slate-800 rounded-full w-4"></div>
               </div>
             </div>
           ))}
@@ -253,7 +253,7 @@ export default function WorkTab() {
 
           {/* Project Title Headings */}
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-850 dark:text-slate-50 leading-tight">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-800 dark:text-slate-50 leading-tight">
               {activeProject.title}
             </h2>
             {activeProject.description && (
@@ -268,7 +268,7 @@ export default function WorkTab() {
             {/* Primary content area */}
             <div className="lg:col-span-2 space-y-6">
               {/* Cover Render Banner */}
-              <div className="aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-150 dark:bg-slate-850 border border-slate-101 dark:border-slate-800/50 shadow-sm relative group">
+              <div className="aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800/50 shadow-sm relative group">
                 <img
                   src={getProjectImage(activeProject) || null}
                   alt={activeProject.title}
@@ -388,7 +388,7 @@ export default function WorkTab() {
     <div className="space-y-8">
       {/* Title with Gradient layout line */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h2 className="text-3xl font-display font-bold text-slate-850 dark:text-slate-100 flex items-center gap-6 shrink-0">
+        <h2 className="text-3xl font-display font-bold text-slate-800 dark:text-slate-100 flex items-center gap-6 shrink-0">
           <span>Portfolio</span>
           <span className="h-0.5 rounded-full bg-gradient-to-r from-orange-400 to-transparent flex-grow max-w-[240px]"></span>
         </h2>

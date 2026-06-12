@@ -62,7 +62,7 @@ const defaultProfile: ProfileDetails = {
     },
     {
       platform: 'github',
-      url: ''
+      url: 'https://github.com/vishalsaini17/vishal-portfolio'
     }
   ],
   contactInfo: {
@@ -203,7 +203,7 @@ const defaultProfile: ProfileDetails = {
       imageUrl: '',
       description: 'An AI-driven enterprise analytics dashboard providing real-time ticket triage and sentiment analysis scores.',
       technologies: 'React.js, Redux Toolkit, Tailwind CSS, Recharts, D3.js',
-      githubUrl: 'https://github.com',
+      githubUrl: 'https://github.com/vishalsaini17/vishal-portfolio',
       liveUrl: 'https://supportlogic.com',
       details: '## Overview\nSupportLogic Analytics is a responsive high-performance dashboard that empowers support and success teams by extracting emotional intelligence and priority signals from incoming tickets.\n\n### Core Deliverables & Architecture\n- Built premium scalable visual representation components using Recharts & D3 for real-time customer data streaming.\n- Implemented dynamic customer health state rules configured via Webhooks.\n- Achieved 45% reduction in page load latency by tuning memory caching and query configurations.'
     },
@@ -213,7 +213,7 @@ const defaultProfile: ProfileDetails = {
       imageUrl: '',
       description: 'A cloud-based loyalty ledger and campaign engine handling millions of customer scan actions smoothly.',
       technologies: 'React.js, TypeScript, Headless UI, Node.js, Firebase',
-      githubUrl: 'https://github.com',
+      githubUrl: 'https://github.com/vishalsaini17/vishal-portfolio',
       details: '## Legacy Reconstruction\nThis loyalty system acts as a high-throughput transaction scanner for automated points calculations and rewards distribution.\n\n### Key Contributions\n- Integrated high-fidelity barcode generation components for physical point-of-sale scanner actions.\n- Scaled server-side real-time state synchronization using Firestore listener hooks.'
     },
     {
@@ -239,7 +239,7 @@ const defaultProfile: ProfileDetails = {
       imageUrl: '',
       description: 'A robust scalable core Shell hosting autonomous business microapps compiled on the fly.',
       technologies: 'React.js, Webpack Module Federation, Jest, Vite',
-      githubUrl: 'https://github.com',
+      githubUrl: 'https://github.com/vishalsaini17/vishal-portfolio',
       details: '## Micro-Frontend Orchestration\nCo-orchestrated the transition from a heavy monolith structure to micro-frontend modules.\n\n### Implementation Insights\n- Implemented custom shared authentication context and event buses across runtime borders.\n- Established strict unit testing rules reaching 90% coverage.'
     }
   ],
@@ -436,14 +436,24 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
             profileName: data.profileName ?? defaultProfile.profileName,
             profileTitle: data.profileTitle ?? defaultProfile.profileTitle,
             profileAvatar: data.profileAvatar ?? defaultProfile.profileAvatar,
-            socialLinks: data.socialLinks ?? defaultProfile.socialLinks,
+            socialLinks: (data.socialLinks ?? defaultProfile.socialLinks).map((link: any) => {
+              if (link.platform === 'github' && (!link.url || link.url === '' || link.url === 'https://github.com')) {
+                return { ...link, url: 'https://github.com/vishalsaini17/vishal-portfolio' };
+              }
+              return link;
+            }),
             contactInfo: data.contactInfo ?? defaultProfile.contactInfo,
             services: data.services ?? defaultProfile.services,
             educationHistory: data.educationHistory ?? defaultProfile.educationHistory,
             experienceHistory: data.experienceHistory ?? defaultProfile.experienceHistory,
             workSkills: data.workSkills ?? defaultProfile.workSkills,
             softSkills: data.softSkills ?? defaultProfile.softSkills,
-            projects: data.projects ?? defaultProfile.projects,
+            projects: (data.projects ?? defaultProfile.projects).map((proj: any) => {
+              if (!proj.githubUrl || proj.githubUrl === '' || proj.githubUrl === 'https://github.com') {
+                return { ...proj, githubUrl: 'https://github.com/vishalsaini17/vishal-portfolio' };
+              }
+              return proj;
+            }),
             aboutTitle: data.aboutTitle ?? defaultProfile.aboutTitle,
             aboutDescription: data.aboutDescription ?? defaultProfile.aboutDescription,
             homeSections: data.homeSections ?? defaultProfile.homeSections,

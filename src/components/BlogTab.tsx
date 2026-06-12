@@ -260,12 +260,12 @@ export default function BlogTab() {
             {/* Blogs List block */}
             {loading ? (
               <div className="py-24 text-center space-y-3">
-                <div className="inline-block w-8 h-8 rounded-full border-4 border-slate-200 dark:border-slate-850 border-t-orange-500 animate-spin" />
+                <div className="inline-block w-8 h-8 rounded-full border-4 border-slate-200 dark:border-slate-800 border-t-orange-500 animate-spin" />
                 <p className="text-xs text-slate-400 font-mono">Digging up logs from database...</p>
               </div>
             ) : filteredBlogs.length === 0 ? (
-              <div className="py-24 text-center border border-dashed border-slate-150 dark:border-slate-800/60 rounded-[32px] space-y-3">
-                <div className="inline-flex p-3 rounded-full bg-slate-50 dark:bg-slate-850 text-slate-400">
+              <div className="py-24 text-center border border-dashed border-slate-200 dark:border-slate-800/60 rounded-[32px] space-y-3">
+                <div className="inline-flex p-3 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-400">
                   <BookOpen className="w-8 h-8 stroke-[1.5]" />
                 </div>
                 <div className="space-y-1">
@@ -281,12 +281,12 @@ export default function BlogTab() {
                   <motion.article
                     key={blog.id}
                     onClick={() => setSelectedBlog(blog)}
-                    className="group relative flex flex-col justify-between p-5 md:p-6 rounded-[24px] border border-slate-150/80 dark:border-slate-850/60 bg-white dark:bg-slate-900 shadow-xs hover:shadow-md hover:border-orange-500/40 cursor-pointer transition-all duration-300"
+                    className="group relative flex flex-col justify-between p-5 md:p-6 rounded-[24px] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs hover:shadow-md hover:border-orange-500/40 cursor-pointer transition-all duration-300"
                     whileHover={{ y: -3 }}
                   >
                     <div className="space-y-4">
                       {/* Cover Photo / Default header graphic */}
-                      <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/60 dark:to-slate-850 border border-slate-100 dark:border-slate-800 shadow-inner shrink-0 flex items-center justify-center">
+                      <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/60 dark:to-slate-800 border border-slate-100 dark:border-slate-800 shadow-inner shrink-0 flex items-center justify-center">
                         {blog.coverImage ? (
                           <img
                             src={blog.coverImage}
@@ -335,7 +335,7 @@ export default function BlogTab() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-850/50 pt-4 mt-5">
+                    <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/50 pt-4 mt-5">
                       {/* Secondary Tags List snippet */}
                       <div className="flex gap-1.5 overflow-hidden max-w-[70%]">
                         {blog.tags && blog.tags.slice(1, 3).map((tg) => (
@@ -365,14 +365,14 @@ export default function BlogTab() {
             {/* Back Button */}
             <button
               onClick={() => setSelectedBlog(null)}
-              className="group flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-orange-500 hover:bg-slate-50 dark:hover:bg-slate-850 transition-all cursor-pointer border border-slate-150/50 dark:border-slate-800/80 mr-auto self-start"
+              className="group flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-orange-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer border border-slate-200 dark:border-slate-800/80 mr-auto self-start"
             >
               <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
               <span>Back to Articles</span>
             </button>
 
             {/* Hero Cover Graphic */}
-            <div className="relative aspect-video w-full rounded-3xl overflow-hidden bg-gradient-to-br from-slate-50 to-slate-150 dark:from-slate-900/60 dark:to-slate-850 border border-slate-150 dark:border-slate-800 shadow-md flex items-center justify-center">
+            <div className="relative aspect-video w-full rounded-3xl overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900/60 dark:to-slate-800 border border-slate-200 dark:border-slate-800 shadow-md flex items-center justify-center">
               {selectedBlog.coverImage ? (
                 <img
                   src={selectedBlog.coverImage}
@@ -416,7 +416,7 @@ export default function BlogTab() {
 
             {/* Heading Context */}
             <div className="space-y-3">
-              <h1 className="text-xl md:text-3xl font-black font-display text-slate-850 dark:text-slate-50 tracking-tight leading-tight">
+              <h1 className="text-xl md:text-3xl font-black font-display text-slate-800 dark:text-slate-50 tracking-tight leading-tight">
                 {selectedBlog.title}
               </h1>
               {selectedBlog.excerpt && (
