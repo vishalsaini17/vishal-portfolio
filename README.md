@@ -18,19 +18,77 @@ Welcome to the technical documentation of the portfolio application. This docume
 
 ## 🔥 Firebase Configuration & Setup
 
-The application connects to a real-time cloud-hosted **Google Firebase/Firestore** instance. This allows for instant synchronizations, profile modifications, live blogging, resume files loading, and dynamic message handling.
+The application connects to a cloud-hosted **Google Firebase & Cloud Firestore** database to power instant data synchronization, portfolio profile customization, blogging, resume file management, and contact message collection.
 
-### 🔌 Client-Side Initialization Config
-The application imports standard configuration values loaded from `firebase-applet-config.json` securely on boot:
+To secure sensitive keys and project details, specific credentials are kept out of this repository's public source. Follow the steps below to configure your own Firebase environment.
 
-| Param Config Key | Current Environment Value / Target |
-| :--- | :--- |
-| **Project ID** | `mindvsmachine-01` |
-| **Auth Domain** | `mindvsmachine-01.firebaseapp.com` |
-| **App ID** | `1:70340889387:web:d07bee1c9468751681d36e` |
-| **Storage Bucket** | `mindvsmachine-01.firebasestorage.app` |
-| **Firestore Database ID** | `ai-studio-f4315d27-f4ff-4c3a-9b84-9cfa83351ead` |
-| **Messaging Sender ID** | `70340889387` |
+---
+
+## 🛠️ Setup Instructions for New Users
+
+If you have downloaded or cloned this repository and want to run it with your own Firebase database, satisfy these pre-requisites:
+
+### 1. Create a Firebase Project
+1. Go to the [Firebase Console](https://console.firebase.google.com/).
+2. Click **Add project** and follow the prompts to create a new project.
+3. Once created, register a new **Web App** in your project dashboard (click the Web `</>` icon).
+4. Note the Firebase configuration object provided in the final screen.
+
+### 2. Configure Firebase Services
+The app relies on two primary Firebase features:
+- **Cloud Firestore**:
+  - Go to Firestore Database in the Firebase left navigation bar.
+  - Click **Create Database**.
+  - Select your preferred database location and start in **Production mode** or **Test mode**.
+  - Create the required collections: `contacts`, `resumes`, `profile`, and `blogs` (the app can also generate these schemas automatically on first write).
+- **Firebase Authentication**:
+  - Go to Authentication in the left navigation bar.
+  - Click **Get Started** and enable **Google** as a Sign-In Provider (needed for the Admin Tab login authorization).
+  - Add your authorized redirect domains (e.g., `localhost` for local development).
+
+### 3. Apply Local Configurations
+The application reads the connection parameters from `/firebase-applet-config.json` at root on startup.
+1. Create a file named `firebase-applet-config.json` at the root of the project (if it does not exist already).
+2. Populate the file with your specific web configuration keys from the Firebase console, using the template below:
+
+```json
+{
+  "projectId": "your-firebase-project-id",
+  "appId": "your-firebase-app-id",
+  "apiKey": "your-firebase-web-api-key",
+  "authDomain": "your-firebase-project-id.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "your-firebase-project-id.firebasestorage.app",
+  "messagingSenderId": "your-messaging-sender-id"
+}
+```
+
+*Note: If you use a custom named Firestore database instead of the `(default)` database, replace `"(default)"` with your specific database ID string.*
+
+---
+
+## ⚡ Environment & Startup Variables
+
+To integrate external AI services or run production-ready servers, add a `.env` file at the root of the project. A template has been provided in `.env.example`:
+
+1. **`GEMINI_API_KEY`**: (Optional) Add your Google Gemini developer key if utilizing AI-assisted text generation or summarization.
+2. **`APP_URL`**: (Optional) Provide your app's hosted domain (e.g. `http://localhost:3000` or a deployed custom URL) for secure redirects and OAuth mappings.
+
+### Running Local Development Server
+
+Once your config file `/firebase-applet-config.json` is set up with valid credentials:
+
+```bash
+# 1. Install local dependencies
+npm install
+
+# 2. Run the full-stack development environment
+npm run dev
+
+# 3. Build & compile for server deployment
+npm run build
+npm run start
+```
 
 ---
 
