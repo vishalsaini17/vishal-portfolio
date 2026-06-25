@@ -1477,15 +1477,15 @@ export default function AdminTab() {
                                       {section.cards.map((card, cIdx) => (
                                         <div
                                           key={card.id}
-                                          className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/35 dark:bg-slate-900/30 relative space-y-2.5"
+                                          className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/35 dark:bg-slate-900/30 relative space-y-2.5 mt-3"
                                         >
                                           {/* Control button row inside card */}
-                                          <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                                          <div className="absolute -top-3.5 right-4 flex items-center gap-1.5 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 shadow-xs z-10">
                                             <button
                                               type="button"
                                               disabled={cIdx === 0}
                                               onClick={() => handleMoveCard(sIdx, cIdx, 'up')}
-                                              className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                                              className={`text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer transition-colors ${cIdx === 0 ? 'opacity-30 cursor-not-allowed' : ''}`}
                                               title="Move Card Up"
                                             >
                                               <ArrowUp className="w-3.5 h-3.5" />
@@ -1494,7 +1494,7 @@ export default function AdminTab() {
                                               type="button"
                                               disabled={cIdx === section.cards.length - 1}
                                               onClick={() => handleMoveCard(sIdx, cIdx, 'down')}
-                                              className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                                              className={`text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer transition-colors ${cIdx === section.cards.length - 1 ? 'opacity-30 cursor-not-allowed' : ''}`}
                                               title="Move Card Down"
                                             >
                                               <ArrowDown className="w-3.5 h-3.5" />
@@ -1502,33 +1502,50 @@ export default function AdminTab() {
                                             <button
                                               type="button"
                                               onClick={() => handleDeleteCardFromSection(sIdx, cIdx)}
-                                              className="text-slate-450 hover:text-rose-500 cursor-pointer"
+                                              className="text-slate-400 hover:text-rose-500 cursor-pointer transition-colors"
                                               title="Delete Card"
                                             >
                                               <Trash2 className="w-3.5 h-3.5" />
                                             </button>
                                           </div>
 
-                                          <div className="space-y-2.5 pr-20">
-                                            <div className="flex flex-col space-y-1">
-                                              <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Card Title:</label>
-                                              <input
-                                                type="text"
-                                                value={card.title}
-                                                onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'title', e.target.value)}
-                                                className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent text-xs text-slate-800 dark:text-slate-100"
-                                                placeholder="Card heading..."
-                                                required
-                                              />
+                                          <div className="space-y-3 pt-1">
+                                            {/* Row 1: Card Title and Card Width */}
+                                            <div className="grid grid-cols-3 gap-3">
+                                              <div className="flex flex-col space-y-1 col-span-2">
+                                                <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Card Title:</label>
+                                                <input
+                                                  type="text"
+                                                  value={card.title}
+                                                  onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'title', e.target.value)}
+                                                  className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 w-full focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                                  placeholder="Card heading..."
+                                                  required
+                                                />
+                                              </div>
+                                              <div className="flex flex-col space-y-1 font-sans col-span-1">
+                                                <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Card Width:</label>
+                                                <select
+                                                  value={card.width || '50%'}
+                                                  onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'width', e.target.value)}
+                                                  className="pl-2.5 pr-8 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 font-sans cursor-pointer w-full focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                                >
+                                                  <option value="25%">25%</option>
+                                                  <option value="50%">50%</option>
+                                                  <option value="75%">75%</option>
+                                                  <option value="100%">100%</option>
+                                                </select>
+                                              </div>
                                             </div>
                                             
-                                            <div className="grid grid-cols-3 gap-2">
-                                              <div className="flex flex-col space-y-1 animate-fade-in font-sans">
+                                            {/* Row 2: Icon Picker and Theme Color (50% each) */}
+                                            <div className="grid grid-cols-2 gap-3">
+                                              <div className="flex flex-col space-y-1 font-sans">
                                                 <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Icon Picker:</label>
                                                 <select
                                                   value={card.iconName}
                                                   onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'iconName', e.target.value)}
-                                                  className="pl-2 pr-8 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent text-xs text-slate-800 dark:text-slate-100 cursor-pointer"
+                                                  className="pl-2.5 pr-8 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 cursor-pointer w-full focus:outline-none focus:ring-1 focus:ring-orange-500"
                                                 >
                                                   <option value="code">Code Block</option>
                                                   <option value="smartphone">Smartphone</option>
@@ -1547,12 +1564,12 @@ export default function AdminTab() {
                                                 </select>
                                               </div>
 
-                                              <div className="flex flex-col space-y-1 font-sans font-sans">
+                                              <div className="flex flex-col space-y-1 font-sans">
                                                 <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Theme Color:</label>
                                                 <select
                                                   value={card.colorTheme || 'orange'}
                                                   onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'colorTheme', e.target.value)}
-                                                  className="pl-2 pr-8 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent text-xs text-slate-800 dark:text-slate-100 cursor-pointer"
+                                                  className="pl-2.5 pr-8 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 cursor-pointer w-full focus:outline-none focus:ring-1 focus:ring-orange-500"
                                                 >
                                                   <option value="orange">Orange Pastel</option>
                                                   <option value="blue">Blue Pastel</option>
@@ -1564,33 +1581,20 @@ export default function AdminTab() {
                                                   <option value="emerald">Emerald Pastel</option>
                                                 </select>
                                               </div>
-
-                                              <div className="flex flex-col space-y-1 font-sans">
-                                                <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Card Width:</label>
-                                                <select
-                                                  value={card.width || '50%'}
-                                                  onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'width', e.target.value)}
-                                                  className="pl-2 pr-8 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent text-xs text-slate-800 dark:text-slate-100 font-sans cursor-pointer"
-                                                >
-                                                  <option value="25%">25% Width</option>
-                                                  <option value="50%">50% Width</option>
-                                                  <option value="75%">75% Width</option>
-                                                  <option value="100%">100% Width</option>
-                                                </select>
-                                              </div>
                                             </div>
-                                          </div>
 
-                                          <div className="flex flex-col space-y-1">
-                                            <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Description Text:</label>
-                                            <textarea
-                                              rows={2}
-                                              value={card.description}
-                                              onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'description', e.target.value)}
-                                              className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-transparent text-xs text-slate-800 dark:text-slate-100 font-sans"
-                                              placeholder="Provide details..."
-                                              required
-                                            />
+                                            {/* Row 3: Description Text (100% / full width) */}
+                                            <div className="flex flex-col space-y-1">
+                                              <label className="text-[9px] font-mono text-slate-400 uppercase font-bold">Description Text:</label>
+                                              <textarea
+                                                rows={2}
+                                                value={card.description}
+                                                onChange={(e) => handleUpdateCardField(sIdx, cIdx, 'description', e.target.value)}
+                                                className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-100 font-sans w-full focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                                placeholder="Provide details..."
+                                                required
+                                              />
+                                            </div>
                                           </div>
                                         </div>
                                       ))}
