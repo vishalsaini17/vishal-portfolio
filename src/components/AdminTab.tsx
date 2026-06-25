@@ -925,7 +925,7 @@ export default function AdminTab() {
               <button
                 id="tab-admin-inbox"
                 onClick={() => setAdminActiveTab('inbox')}
-                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all ${
+                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                   adminActiveTab === 'inbox'
                     ? 'bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-xs'
                     : 'bg-slate-150/10 dark:bg-slate-800/20 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
@@ -936,7 +936,7 @@ export default function AdminTab() {
               <button
                 id="tab-admin-blog"
                 onClick={() => setAdminActiveTab('blog')}
-                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all ${
+                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                   adminActiveTab === 'blog'
                     ? 'bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-xs'
                     : 'bg-slate-100/10 dark:bg-slate-800/20 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
@@ -947,7 +947,7 @@ export default function AdminTab() {
               <button
                 id="tab-admin-profile"
                 onClick={() => setAdminActiveTab('profile')}
-                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all ${
+                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                   adminActiveTab === 'profile'
                     ? 'bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-xs'
                     : 'bg-slate-150/10 dark:bg-slate-800/20 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
@@ -958,7 +958,7 @@ export default function AdminTab() {
               <button
                 id="tab-admin-resume"
                 onClick={() => setAdminActiveTab('resume')}
-                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all ${
+                className={`py-2 px-4 rounded-xl text-xs font-semibold cursor-pointer shrink-0 transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                   adminActiveTab === 'resume'
                     ? 'bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-xs'
                     : 'bg-slate-150/10 dark:bg-slate-800/20 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
@@ -1027,7 +1027,7 @@ export default function AdminTab() {
                       type="button"
                       id="profile-subtab-common"
                       onClick={() => setProfileSubTab('common')}
-                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                         profileSubTab === 'common'
                           ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-xs border border-slate-200/50 dark:border-slate-700/60'
                           : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
@@ -1040,7 +1040,7 @@ export default function AdminTab() {
                       type="button"
                       id="profile-subtab-home"
                       onClick={() => setProfileSubTab('home')}
-                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                         profileSubTab === 'home'
                           ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-xs border border-slate-200/50 dark:border-slate-700/60'
                           : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
@@ -1053,7 +1053,7 @@ export default function AdminTab() {
                       type="button"
                       id="profile-subtab-resume"
                       onClick={() => setProfileSubTab('resume')}
-                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                         profileSubTab === 'resume'
                           ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-xs border border-slate-200/50 dark:border-slate-700/60'
                           : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
@@ -1066,7 +1066,7 @@ export default function AdminTab() {
                       type="button"
                       id="profile-subtab-work"
                       onClick={() => setProfileSubTab('work')}
-                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                         profileSubTab === 'work'
                           ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-xs border border-slate-200/50 dark:border-slate-700/60'
                           : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
@@ -1079,7 +1079,7 @@ export default function AdminTab() {
                       type="button"
                       id="profile-subtab-contact"
                       onClick={() => setProfileSubTab('contact')}
-                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                         profileSubTab === 'contact'
                           ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-xs border border-slate-200/50 dark:border-slate-700/60'
                           : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
@@ -1092,7 +1092,7 @@ export default function AdminTab() {
                       type="button"
                       id="profile-subtab-blog"
                       onClick={() => setProfileSubTab('blog')}
-                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                      className={`flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold cursor-pointer transition-all focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ${
                         profileSubTab === 'blog'
                           ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-xs border border-slate-200/50 dark:border-slate-700/60'
                           : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
@@ -1103,9 +1103,17 @@ export default function AdminTab() {
                     </button>
                   </div>
 
-                  {/* SUBTAB CONTENT: COMMON INFO */}
-                  {profileSubTab === 'common' && (
-                    <div className="space-y-8 animate-fade-in">
+                  <AnimatePresence mode="wait">
+                    {/* SUBTAB CONTENT: COMMON INFO */}
+                    {profileSubTab === 'common' && (
+                      <motion.div
+                        key="subtab-common"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="space-y-8"
+                      >
                       {/* SECTION 1: Personal Branding */}
                       <div className="space-y-4 font-sans">
                         <h4 className="text-xs uppercase font-bold text-teal-500 tracking-wider">
@@ -1308,12 +1316,19 @@ export default function AdminTab() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                      </motion.div>
+                    )}
 
-                  {/* SUBTAB CONTENT: HOME PAGE */}
-                  {profileSubTab === 'home' && (
-                    <div className="space-y-8 animate-fade-in font-sans">
+                    {/* SUBTAB CONTENT: HOME PAGE */}
+                    {profileSubTab === 'home' && (
+                      <motion.div
+                        key="subtab-home"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="space-y-8 font-sans"
+                      >
                       {/* About Section details editing */}
                       <div className="space-y-4">
                         <h4 className="text-xs uppercase font-bold text-orange-500 tracking-wider">
@@ -1587,12 +1602,19 @@ export default function AdminTab() {
                           )}
                         </div>
                       </div>
-                    </div>
-                  )}
+                      </motion.div>
+                    )}
 
-                  {/* SUBTAB CONTENT: RESUME CONTENTS */}
-                  {profileSubTab === 'resume' && (
-                    <div className="space-y-8 animate-fade-in">
+                    {/* SUBTAB CONTENT: RESUME CONTENTS */}
+                    {profileSubTab === 'resume' && (
+                      <motion.div
+                        key="subtab-resume"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="space-y-8"
+                      >
                       {/* Section: Dynamic Layout Builder */}
                       <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/10 space-y-6">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-150 dark:border-slate-800 pb-4">
@@ -1965,12 +1987,19 @@ export default function AdminTab() {
                           )}
                         </button>
                       </div>
-                    </div>
-                  )}
+                      </motion.div>
+                    )}
 
-                  {/* SUBTAB CONTENT: WORK PAGE */}
-                  {profileSubTab === 'work' && (
-                    <div className="space-y-8">
+                    {/* SUBTAB CONTENT: WORK PAGE */}
+                    {profileSubTab === 'work' && (
+                      <motion.div
+                        key="subtab-work"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="space-y-8"
+                      >
                       {/* SECTION 7: Projects Editor */}
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
@@ -2273,11 +2302,18 @@ export default function AdminTab() {
                           );
                         })()}
                       </div>
-                    </div>
-                  )}
+                      </motion.div>
+                    )}
                                {/* SUBTAB CONTENT: CONTACT PAGE */}
-                  {profileSubTab === 'contact' && (
-                    <div className="space-y-8 animate-fade-in font-sans">
+                    {profileSubTab === 'contact' && (
+                      <motion.div
+                        key="subtab-contact"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="space-y-8 font-sans"
+                      >
                       {/* SECTION 2: Contact Options & Headings Config */}
                       <div className="space-y-4">
                         <h4 className="text-xs uppercase font-bold text-orange-500 tracking-wider">
@@ -2306,12 +2342,19 @@ export default function AdminTab() {
                           />
                         </div>
                       </div>
-                    </div>
-                  )}
+                      </motion.div>
+                    )}
 
-                  {/* SUBTAB CONTENT: BLOG SETTINGS */}
-                  {profileSubTab === 'blog' && (
-                    <div className="space-y-8 animate-fade-in font-sans">
+                    {/* SUBTAB CONTENT: BLOG SETTINGS */}
+                    {profileSubTab === 'blog' && (
+                      <motion.div
+                        key="subtab-blog"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="space-y-8 font-sans"
+                      >
                       <div className="space-y-4">
                         <h4 className="text-xs uppercase font-bold text-pink-500 tracking-wider flex items-center gap-2">
                           <BookOpen className="w-4 h-4" />
@@ -2367,8 +2410,9 @@ export default function AdminTab() {
                           />
                         </div>
                       </div>
-                    </div>
-                  )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* BOTTOM SAVE CONTROLLER ROW */}
                   <div className="pt-5 border-t border-slate-100 dark:border-slate-800/60 flex justify-end">
