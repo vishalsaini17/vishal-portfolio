@@ -20,6 +20,7 @@ import {
   Heart
 } from 'lucide-react';
 import { useProfile } from '../profileContext';
+import { markdownToHtml } from './MarkdownEditor';
 
 export default function HomeTab() {
   const { profile, loading } = useProfile();
@@ -170,9 +171,10 @@ export default function HomeTab() {
         </h2>
 
         {aboutDescription && (
-          <p className="text-[15px] leading-7 text-slate-600 dark:text-slate-300 font-sans tracking-wide whitespace-pre-wrap">
-            {aboutDescription}
-          </p>
+          <div 
+            className="text-[15px] leading-7 text-slate-600 dark:text-slate-300 font-sans tracking-wide space-y-4 text-left prose prose-sm dark:prose-invert max-w-none [&_strong]:text-orange-600 dark:[&_strong]:text-orange-400 [&_strong]:font-semibold"
+            dangerouslySetInnerHTML={{ __html: markdownToHtml(aboutDescription) }}
+          />
         )}
       </div>
 

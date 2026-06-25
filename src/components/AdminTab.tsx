@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   LogIn, LogOut, Mail, Trash2, Calendar, FileText, Upload, CheckCircle2, 
@@ -21,8 +22,7 @@ import {
 } from 'firebase/firestore';
 import { useProfile, ProfileDetails } from '../profileContext';
 import { ServiceCard, EducationItem, ExperienceItem, ProjectItem, SocialLink, HomeSection, HomeSectionCard, ResumeSection, ResumeSectionCard } from '../types';
-import ProjectMarkdownEditor from './ProjectMarkdownEditor';
-import BlogMarkdownEditor from './BlogMarkdownEditor';
+import MarkdownEditor from './MarkdownEditor';
 
 interface ContactMessage {
   id: string;
@@ -136,6 +136,7 @@ const SkillsTextInput: React.FC<SkillsTextInputProps> = ({ cards, onChange }) =>
 };
 
 export default function AdminTab() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -311,6 +312,7 @@ export default function AdminTab() {
   const handleAdminLogout = async () => {
     try {
       await signOut(auth);
+      navigate('/');
     } catch (err) {
       console.error('Logout failed:', err);
     }
@@ -1330,13 +1332,12 @@ export default function AdminTab() {
                         </div>
                         <div className="flex flex-col space-y-1.5">
                           <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">About Description Paragraph:</label>
-                          <textarea
-                            rows={4}
+                          <MarkdownEditor
+                            editorId="about-description-editor"
                             value={profileForm.aboutDescription || ''}
-                            onChange={(e) => setProfileForm({ ...profileForm, aboutDescription: e.target.value })}
-                            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent text-slate-800 dark:text-slate-100 text-sm focus:border-orange-400 outline-none transition-colors font-sans"
-                            placeholder="Write descriptions about yourself..."
-                            required
+                            onChange={(newVal) => setProfileForm({ ...profileForm, aboutDescription: newVal })}
+                            placeholder="Write description paragraphs about yourself... You can use **bold**, *italics*, lists, and links."
+                            templateType="blog"
                           />
                         </div>
                       </div>
@@ -2251,8 +2252,8 @@ export default function AdminTab() {
                                             </label>
                                             <span className="text-[8px] text-slate-400 font-mono">Supports: # Headers, - Lists, **Bold**</span>
                                           </div>
-                                          <ProjectMarkdownEditor
-                                            projectId={`project-${originalIndex}`}
+                                          <MarkdownEditor
+                                            editorId={`project-editor-${originalIndex}`}
                                             value={project.details || ''}
                                             onChange={(newDetails) => {
                                               const projects = [...profileForm.projects];
@@ -2260,6 +2261,7 @@ export default function AdminTab() {
                                               setProfileForm({ ...profileForm, projects });
                                             }}
                                             placeholder="## Overview&#10;Describe your project modules, setup steps, architectural decisions, and design details exactly like a rich technical blog post."
+                                            templateType="project"
                                           />
                                         </div>
                                       </div>
@@ -2329,12 +2331,14 @@ export default function AdminTab() {
                           <button
                             type="button"
                             onClick={() => setProfileForm({ ...profileForm, blogEnabled: !profileForm.blogEnabled })}
-                            className={`w-12 h-6.5 p-0.5 rounded-full duration-200 cursor-pointer ${
-                              profileForm.blogEnabled ? 'bg-orange-500' : 'bg-slate-350 dark:bg-slate-800'
+                            className={`w-11 h-6 p-0.5 rounded-full duration-200 cursor-pointer border flex items-center ${
+                              profileForm.blogEnabled 
+                                ? 'bg-orange-500 border-orange-600 text-white' 
+                                : 'bg-slate-300 dark:bg-slate-700 border-slate-400 dark:border-slate-600'
                             }`}
                           >
-                            <div className={`w-5.5 h-5.5 rounded-full bg-white shadow-sm duration-200 ${
-                              profileForm.blogEnabled ? 'translate-x-5.5' : 'translate-x-0'
+                            <div className={`w-5 h-5 rounded-full bg-white shadow-md duration-200 ${
+                              profileForm.blogEnabled ? 'translate-x-5' : 'translate-x-0'
                             }`} />
                           </button>
                         </div>
@@ -2905,10 +2909,12 @@ export default function AdminTab() {
                           <span>Article Body (Markdown Supported)</span>
                         </label>
                         <div className="border border-slate-150 dark:border-slate-800/80 rounded-2xl overflow-hidden focus-within:ring-1 focus-within:ring-orange-500 focus-within:border-orange-500 shadow-xs">
-                          <BlogMarkdownEditor
+                          <MarkdownEditor
+                            editorId="blog-editor-field"
                             value={editingBlog.content || ''}
                             onChange={(newContent) => setEditingBlog({ ...editingBlog, content: newContent })}
                             placeholder="Start writing your thoughts, tutorial guides, or system architectural notes. You can use standard Markdown tags, lists, links, and code blocks..."
+                            templateType="blog"
                           />
                         </div>
                       </div>

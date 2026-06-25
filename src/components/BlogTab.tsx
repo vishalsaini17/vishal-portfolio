@@ -419,11 +419,6 @@ export default function BlogTab() {
               <h1 className="text-xl md:text-3xl font-black font-display text-slate-800 dark:text-slate-50 tracking-tight leading-tight">
                 {selectedBlog.title}
               </h1>
-              {selectedBlog.excerpt && (
-                <p className="text-xs md:text-sm font-medium italic text-slate-400 leading-relaxed font-sans border-l-2 border-orange-500 pl-3">
-                  {selectedBlog.excerpt}
-                </p>
-              )}
             </div>
 
             {/* Custom parsed Markdown body */}
