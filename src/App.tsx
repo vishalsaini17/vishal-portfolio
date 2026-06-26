@@ -20,7 +20,6 @@ import WorkTab from './components/WorkTab';
 import ContactTab from './components/ContactTab';
 import BlogTab from './components/BlogTab';
 import AdminTab from './components/AdminTab';
-import RemoveTrailingSlash from './components/RemoveTrailingSlash';
 
 export default function App() {
   const { profile } = useProfile();
@@ -104,7 +103,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f3f6f9] dark:bg-[#0b101d] text-slate-800 dark:text-slate-100 flex flex-col transition-all duration-500 overflow-x-clip font-sans pb-16">
-      <RemoveTrailingSlash />
       
       {/* Dynamic Header */}
       <Header
